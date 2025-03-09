@@ -1,36 +1,61 @@
 using System;
-using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text.Json;
+using GuildedChatExporter.Core.Exceptions;
 
 namespace GuildedChatExporter.Core.Utils.Extensions;
 
 public static class ExceptionExtensions
 {
-    public static bool IsCausedBy<T>(this Exception exception)
-        where T : Exception
-    {
-        var inner = exception;
-        while (inner != null)
-        {
-            if (inner is T)
-                return true;
+    public static GuildedChatExporterException ToGuildedChatExporterException(
+        this Exception exception
+    ) =>
+        exception is GuildedChatExporterException guildedException ? guildedException
+        : exception is HttpRequestException httpRequestException
+            ? httpRequestException.ToGuildedChatExporterException()
+        : new GuildedChatExporterException($"Unknown error: {exception.Message}", exception, true);
 
-            inner = inner.InnerException;
+    private static GuildedChatExporterException ToGuildedChatExporterException(
+        this HttpRequestException exception
+    )
+    {
+        var message = exception.Message;
+        var statusCode = exception.StatusCode;
+
+        // Try to extract a more specific error message from the response
+        if (exception.Data.Contains("Response"))
+        {
+            var responseJson = exception.Data["Response"] as string;
+            if (!string.IsNullOrWhiteSpace(responseJson))
+            {
+                try
+                {
+                    var response = JsonSerializer.Deserialize<JsonElement>(responseJson);
+                    if (
+                        response.TryGetProperty("message", out var messageElement)
+                        && messageElement.ValueKind == JsonValueKind.String
+                    )
+                    {
+                        message = messageElement.GetString() ?? message;
+                    }
+                }
+                catch
+                {
+                    // Ignore JSON parsing errors
+                }
+            }
         }
 
-        return false;
-    }
-
-    public static string JoinMessages(this Exception exception)
-    {
-        var inner = exception;
-        var messages = new string[0];
-
-        while (inner != null)
+        // Determine if the error is fatal based on the status code
+        var isFatal = statusCode switch
         {
-            messages = messages.Append(inner.Message).ToArray();
-            inner = inner.InnerException;
-        }
+            HttpStatusCode.Unauthorized => false,
+            HttpStatusCode.Forbidden => false,
+            HttpStatusCode.NotFound => false,
+            _ => true,
+        };
 
-        return string.Join(" -> ", messages);
+        return new GuildedChatExporterException($"Request failed: {message}", exception, isFatal);
     }
 }

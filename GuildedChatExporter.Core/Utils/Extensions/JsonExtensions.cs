@@ -10,7 +10,7 @@ public static class JsonExtensions
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         PropertyNameCaseInsensitive = true,
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     };
 
     public static T? ParseJson<T>(this string json, JsonSerializerOptions? options = null) =>
@@ -31,11 +31,9 @@ public static class JsonExtensions
             : null;
 
     public static bool? GetBooleanOrNull(this JsonElement element) =>
-        element.ValueKind == JsonValueKind.True
-            ? true
-            : element.ValueKind == JsonValueKind.False
-                ? false
-                : null;
+        element.ValueKind == JsonValueKind.True ? true
+        : element.ValueKind == JsonValueKind.False ? false
+        : null;
 
     public static DateTimeOffset? GetDateTimeOffsetOrNull(this JsonElement element) =>
         element.ValueKind == JsonValueKind.String

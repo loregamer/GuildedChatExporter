@@ -15,7 +15,7 @@ public static class Http
         var handler = new HttpClientHandler
         {
             UseCookies = false,
-            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
         };
 
         var client = new HttpClient(handler, true);

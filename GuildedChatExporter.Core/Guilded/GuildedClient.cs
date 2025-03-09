@@ -5,11 +5,11 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Gress;
 using GuildedChatExporter.Core.Exceptions;
 using GuildedChatExporter.Core.Guilded.Data;
 using GuildedChatExporter.Core.Utils;
 using GuildedChatExporter.Core.Utils.Extensions;
-using Gress;
 
 namespace GuildedChatExporter.Core.Guilded;
 
@@ -40,7 +40,10 @@ public class GuildedClient : IDisposable
         return "user-123";
     }
 
-    public async Task<Channel> GetChannelAsync(GuildedId channelId, CancellationToken cancellationToken = default)
+    public async Task<Channel> GetChannelAsync(
+        GuildedId channelId,
+        CancellationToken cancellationToken = default
+    )
     {
         // This is a placeholder implementation
         // In a real implementation, we would make a request to the Guilded API to get the channel

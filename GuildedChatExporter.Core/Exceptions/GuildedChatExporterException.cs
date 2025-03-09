@@ -12,7 +12,11 @@ public class GuildedChatExporterException : Exception
         IsFatal = isFatal;
     }
 
-    public GuildedChatExporterException(string message, Exception innerException, bool isFatal = false)
+    public GuildedChatExporterException(
+        string message,
+        Exception innerException,
+        bool isFatal = false
+    )
         : base(message, innerException)
     {
         IsFatal = isFatal;

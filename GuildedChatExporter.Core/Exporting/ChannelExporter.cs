@@ -53,10 +53,16 @@ public class ChannelExporter
         await writer.WriteLineAsync("Messages:");
         await writer.WriteLineAsync();
 
+        // Convert the progress to a double progress
+        var doubleProgress =
+            progress != null
+                ? new Progress<double>(value => progress.Report(Percentage.FromFraction(value)))
+                : null;
+
         await foreach (
             var message in _guilded.GetMessagesAsync(
                 request.Channel.Id,
-                progress,
+                doubleProgress,
                 cancellationToken
             )
         )

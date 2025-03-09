@@ -1,19 +1,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28729.10
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EA305DD5-1F98-415D-B6C4-65053A58F914}"
-	ProjectSection(SolutionItems) = preProject
-		License.txt = License.txt
-		Readme.md = Readme.md
-		Directory.Build.props = Directory.Build.props
-		build.ps1 = build.ps1
-		build.sh = build.sh
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuildedChatExporter.Cli", "GuildedChatExporter.Cli\GuildedChatExporter.Cli.csproj", "{D9D8D5D5-5F5F-4F4F-8E8E-7E7E6E6E6E6E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuildedChatExporter.Cli", "GuildedChatExporter.Cli\GuildedChatExporter.Cli.csproj", "{D08624B6-3081-4BCB-91F8-E9832FACC6CE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuildedChatExporter.Core", "GuildedChatExporter.Core\GuildedChatExporter.Core.csproj", "{E19980B9-2B84-4257-A517-540FF1E3FCDD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuildedChatExporter.Core", "GuildedChatExporter.Core\GuildedChatExporter.Core.csproj", "{E9E9E9E9-9E9E-9E9E-9E9E-9E9E9E9E9E9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,19 +12,19 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D08624B6-3081-4BCB-91F8-E9832FACC6CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D08624B6-3081-4BCB-91F8-E9832FACC6CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D08624B6-3081-4BCB-91F8-E9832FACC6CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D08624B6-3081-4BCB-91F8-E9832FACC6CE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E19980B9-2B84-4257-A517-540FF1E3FCDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E19980B9-2B84-4257-A517-540FF1E3FCDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E19980B9-2B84-4257-A517-540FF1E3FCDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E19980B9-2B84-4257-A517-540FF1E3FCDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9D8D5D5-5F5F-4F4F-8E8E-7E7E6E6E6E6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9D8D5D5-5F5F-4F4F-8E8E-7E7E6E6E6E6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9D8D5D5-5F5F-4F4F-8E8E-7E7E6E6E6E6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9D8D5D5-5F5F-4F4F-8E8E-7E7E6E6E6E6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9E9E9E9-9E9E-9E9E-9E9E-9E9E9E9E9E9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9E9E9E9-9E9E-9E9E-9E9E-9E9E9E9E9E9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9E9E9E9-9E9E-9E9E-9E9E-9E9E9E9E9E9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9E9E9E9-9E9E-9E9E-9E9E-9E9E9E9E9E9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {51587D08-01E1-4511-AC57-A417D1A9162F}
+		SolutionGuid = {F9F9F9F9-F9F9-F9F9-F9F9-F9F9F9F9F9F9}
 	EndGlobalSection
 EndGlobal

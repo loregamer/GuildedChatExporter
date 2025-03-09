@@ -1,11 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
 using GuildedChatExporter.Cli.Commands.Base;
-using GuildedChatExporter.Cli.Utils.Extensions;
+using GuildedChatExporter.Core.Guilded;
 using GuildedChatExporter.Core.Guilded.Data;
-using Spectre.Console;
 
 namespace GuildedChatExporter.Cli.Commands;
 
@@ -17,27 +17,22 @@ public class ExportDirectMessagesCommand : ExportCommandBase
         await base.ExecuteAsync(console);
 
         var cancellationToken = console.RegisterCancellationHandler();
-        var channels = new List<Channel>();
 
         await console.Output.WriteLineAsync("Fetching direct message channels...");
 
-        var fetchedChannelsCount = 0;
-        await console
-            .CreateProgressTicker()
-            .StartAsync(async ctx =>
-            {
-                await foreach (var channel in Guilded.GetDirectChannelsAsync(cancellationToken))
-                {
-                    channels.Add(channel);
+        var channels = new List<Channel>();
+        await foreach (var channel in Guilded.GetDirectChannelsAsync(cancellationToken))
+        {
+            channels.Add(channel);
+        }
 
-                    ctx.Status(Markup.Escape($"Fetched '{channel.DisplayName}'."));
+        if (!channels.Any())
+        {
+            await console.Output.WriteLineAsync("No direct message channels found.");
+            return;
+        }
 
-                    fetchedChannelsCount++;
-                }
-            });
-
-        await console.Output.WriteLineAsync($"Fetched {fetchedChannelsCount} channel(s).");
-
+        await console.Output.WriteLineAsync($"Found {channels.Count} channel(s).");
         await ExportAsync(console, channels);
     }
 }

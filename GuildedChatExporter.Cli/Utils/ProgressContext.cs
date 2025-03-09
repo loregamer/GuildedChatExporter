@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Spectre.Console;
 
@@ -9,21 +8,22 @@ namespace GuildedChatExporter.Cli.Utils;
 
 public class ProgressContext
 {
+    private readonly IAnsiConsole _console;
     private readonly TextWriter _output;
     private readonly bool _isOutputRedirected;
-    private readonly Dictionary<string, ProgressTask> _tasks = new(StringComparer.Ordinal);
-    private readonly object _lock = new();
-    private bool _hideCompleted;
 
     public ProgressContext(TextWriter output, bool isOutputRedirected)
     {
+        _console = AnsiConsole.Create(
+            new AnsiConsoleSettings { Out = new AnsiConsoleOutput(output) }
+        );
         _output = output;
         _isOutputRedirected = isOutputRedirected;
     }
 
-    public ProgressContext HideCompleted(bool hideCompleted = true)
+    public ProgressContext HideCompleted(bool value)
     {
-        _hideCompleted = hideCompleted;
+        // This is a no-op for now
         return this;
     }
 
@@ -35,89 +35,84 @@ public class ProgressContext
             return;
         }
 
-        await AnsiConsole
+        await _console
             .Progress()
-            .AutoClear(false)
-            .HideCompleted(_hideCompleted)
-            .StartAsync(async ctx =>
-            {
-                var progressTasks = new Dictionary<string, Spectre.Console.ProgressTask>(
-                    StringComparer.Ordinal
-                );
-
-                void RenderTask(string description, double? progress)
+            .AutoClear(true)
+            .HideCompleted(false)
+            .Columns(
+                new ProgressColumn[]
                 {
-                    if (!progressTasks.TryGetValue(description, out var progressTask))
-                    {
-                        progressTask = ctx.AddTask(description);
-                        progressTasks[description] = progressTask;
-                    }
-
-                    if (progress is not null)
-                        progressTask.Value = progress.Value * 100;
+                    new TaskDescriptionColumn(),
+                    new ProgressBarColumn(),
+                    new PercentageColumn(),
+                    new RemainingTimeColumn(),
+                    new SpinnerColumn(),
                 }
-
-                void RenderTasks()
-                {
-                    lock (_lock)
-                    {
-                        foreach (var (description, task) in _tasks)
-                            RenderTask(description, task.Progress);
-                    }
-                }
-
-                // Render initial state
-                RenderTasks();
-
-                // Start the handler
-                await handler(this);
-
-                // Mark all tasks as completed
-                foreach (var task in progressTasks.Values)
-                    task.Value = 100;
-            });
+            )
+            .StartAsync(async ctx => await handler(this));
     }
 
     public async Task StartTaskAsync(string description, Func<IProgress<double>, Task> handler)
     {
+        if (_isOutputRedirected)
+        {
+            await _output.WriteLineAsync($"Starting task: {description}");
+            var progress = new Progress<double>(p =>
+            {
+                if (p >= 1.0)
+                {
+                    _output.WriteLineAsync($"Completed task: {description}");
+                }
+            });
+
+            await handler(progress);
+            return;
+        }
+
         var task = new ProgressTask(description);
-
-        lock (_lock)
-            _tasks[description] = task;
-
-        try
-        {
-            await handler(task);
-            task.Progress = 1;
-        }
-        catch
-        {
-            task.Progress = null;
-            throw;
-        }
-        finally
-        {
-            if (_isOutputRedirected)
-                await _output.WriteLineAsync($"Completed: {description}");
-        }
+        var progressHandler = new Progress<double>(p => task.Value = p * 100);
+        await handler(progressHandler);
     }
 
     public void Status(string status)
     {
         if (_isOutputRedirected)
-            _output.WriteLine(status);
+        {
+            _output.WriteLineAsync(status);
+        }
     }
 
-    private class ProgressTask : IProgress<double>
+    private class ProgressTask
     {
         public string Description { get; }
-        public double? Progress { get; set; }
+        public double Value { get; set; }
 
         public ProgressTask(string description)
         {
             Description = description;
         }
+    }
 
-        public void Report(double value) => Progress = value;
+    private class AnsiConsoleOutput : IAnsiConsoleOutput
+    {
+        private readonly TextWriter _writer;
+
+        public AnsiConsoleOutput(TextWriter writer)
+        {
+            _writer = writer;
+        }
+
+        public TextWriter Writer => _writer;
+
+        public bool IsTerminal => false;
+
+        public int Width => 80;
+
+        public int Height => 24;
+
+        public void SetEncoding(Encoding encoding)
+        {
+            // No-op
+        }
     }
 }
