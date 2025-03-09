@@ -1,0 +1,21 @@
+<Application
+    x:Class="GuildedChatExporter.Gui.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+    xmlns:materialStyles="clr-namespace:Material.Styles;assembly=Material.Styles"
+    xmlns:materialThemes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
+    xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
+    ActualThemeVariantChanged="Application_OnActualThemeVariantChanged"
+    RequestedThemeVariant="Default">
+    <Application.Resources>
+        <!-- Empty resources for now -->
+    </Application.Resources>
+    <Application.Styles>
+        <!-- Use MaterialTheme instead of BundledTheme -->
+        <materialThemes:MaterialTheme BaseTheme="Light" PrimaryColor="Amber" SecondaryColor="Indigo" />
+        <materialStyles:MaterialToolKit />
+        <!-- Add DialogHostStyles to Styles collection instead of MergedDictionaries -->
+        <dialogHostAvalonia:DialogHostStyles />
+    </Application.Styles>
+</Application>
