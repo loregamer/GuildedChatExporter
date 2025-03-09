@@ -32,31 +32,33 @@ if (Test-Path $artifactsDir) {
 
 New-Item -Path $artifactsDir -ItemType Directory -Force | Out-Null
 
-# Restore
-if (-not $NoRestore) {
-    Write-Output 'Restoring packages...'
-    dotnet restore
-}
+foreach ($rt in $Runtime) {
+    Write-Output "Processing $rt..."
+    
+    # Restore
+    if (-not $NoRestore) {
+        Write-Output "Restoring for $rt..."
+        dotnet restore GuildedChatExporter.sln -r $rt
+    }
 
-# Build
-if (-not $NoBuild) {
-    Write-Output "Building ($Configuration)..."
-    dotnet build --configuration $Configuration --no-restore
-}
-
-# Publish
-if (-not $NoPublish) {
-    foreach ($rt in $Runtime) {
+    # Publish
+    if (-not $NoPublish) {
         Write-Output "Publishing for $rt..."
         
         $runtimeDir = Join-Path $artifactsDir $rt
         New-Item -Path $runtimeDir -ItemType Directory -Force | Out-Null
         
+        # Publish CLI
         dotnet publish GuildedChatExporter.Cli `
             --configuration $Configuration `
             --runtime $rt `
-            --no-restore `
-            --no-build `
+            --self-contained true `
+            --output $runtimeDir
+            
+        # Publish GUI
+        dotnet publish GuildedChatExporter.Gui `
+            --configuration $Configuration `
+            --runtime $rt `
             --self-contained true `
             --output $runtimeDir
             

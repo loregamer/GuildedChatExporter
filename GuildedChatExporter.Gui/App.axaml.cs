@@ -98,7 +98,11 @@ public class App : Application, IDisposable
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            desktop.MainWindow = new MainView { DataContext = _mainViewModel };
+        {
+            var mainWindow = new MainView { DataContext = _mainViewModel };
+            desktop.MainWindow = mainWindow;
+            mainWindow.Show();
+        }
 
         base.OnFrameworkInitializationCompleted();
 

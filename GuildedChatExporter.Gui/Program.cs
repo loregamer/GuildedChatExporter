@@ -3,6 +3,8 @@ using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.ReactiveUI;
+using Avalonia.Skia;
 
 namespace GuildedChatExporter.Gui;
 
@@ -35,5 +37,6 @@ public static class Program
             .Configure<App>()
             .UsePlatformDetect()
             .LogToTrace()
+            .UseReactiveUI()
             .With(new SkiaOptions { MaxGpuResourceSizeBytes = 8096000 });
 }

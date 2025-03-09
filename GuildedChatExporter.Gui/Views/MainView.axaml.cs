@@ -1,4 +1,7 @@
 using System;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Diagnostics;
 using Avalonia.Interactivity;
 using DialogHostAvalonia;
 using GuildedChatExporter.Gui.Framework;
@@ -7,23 +10,27 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GuildedChatExporter.Gui.Views;
 
-public partial class MainView : Avalonia.Controls.Window
+public partial class MainView : Framework.Window
 {
     private MainViewModel ViewModel => (MainViewModel)DataContext!;
 
     public MainView()
     {
         InitializeComponent();
+
+        this.Opened += (s, e) =>
+        {
+            this.Activate();
+            this.Focus();
+            this.Show();
+        };
     }
 
     private void DialogHost_OnLoaded(object? sender, RoutedEventArgs args)
     {
-        // Register the dialog host
         var app = (App)App.Current!;
         var dialogManager = app.Services.GetRequiredService<DialogManager>();
         dialogManager.RegisterHost(DialogHost);
-
-        // Initialize the view model
         ViewModel.InitializeCommand.Execute(null);
     }
 }

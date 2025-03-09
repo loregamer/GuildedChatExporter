@@ -6,16 +6,20 @@
     xmlns:materialStyles="clr-namespace:Material.Styles;assembly=Material.Styles"
     xmlns:materialThemes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
     xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
+    xmlns:themes="using:Avalonia.Themes.Fluent"
     ActualThemeVariantChanged="Application_OnActualThemeVariantChanged"
     RequestedThemeVariant="Default">
     <Application.Resources>
         <!-- Empty resources for now -->
     </Application.Resources>
     <Application.Styles>
+        <themes:FluentTheme />
         <!-- Use MaterialTheme instead of BundledTheme -->
         <materialThemes:MaterialTheme BaseTheme="Light" PrimaryColor="Amber" SecondaryColor="Indigo" />
         <materialStyles:MaterialToolKit />
         <!-- Add DialogHostStyles to Styles collection instead of MergedDictionaries -->
         <dialogHostAvalonia:DialogHostStyles />
+        <materialIcons:MaterialIconStyles />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
     </Application.Styles>
 </Application>

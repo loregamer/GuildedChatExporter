@@ -13,7 +13,9 @@
     x:DataType="viewModels:MainViewModel"
     Icon="/favicon.ico"
     RenderOptions.BitmapInterpolationMode="HighQuality"
-    WindowStartupLocation="CenterScreen">
+    WindowStartupLocation="CenterScreen"
+    ExtendClientAreaToDecorationsHint="True"
+    ShowInTaskbar="True">
     <dialogHostAvalonia:DialogHost
         x:Name="DialogHost"
         CloseOnClickAway="False"
